@@ -17,11 +17,9 @@ func putMsgToCache(c *cache.LruCache, key string, msg *D.Msg) {
 	case len(msg.Answer) != 0:
 		ttl = msg.Answer[0].Header().Ttl
 	case len(msg.Ns) != 0:
-		ttl = msg.Ns[0].Header().Ttl
 	case len(msg.Extra) != 0:
 		ttl = msg.Extra[0].Header().Ttl
 	default:
-		log.Debugln("[DNS] response msg empty: %#v", msg)
 		return
 	}
 
@@ -48,8 +46,6 @@ func isIPRequest(q D.Question) bool {
 
 func transform(servers []NameServer, resolver *Resolver) []dnsClient {
 	ret := []dnsClient{}
-	for _, s := range servers {
-		switch s.Net {
 		case "https":
 			ret = append(ret, newDoHClient(s.Addr, s.Interface, resolver))
 			continue
